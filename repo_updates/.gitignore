@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build
+*.egg-info/
+dist/
+build/
+
+# Temporary
+*.tmp
+*.log
+
+# Raw dataset: ~213 MB, GitHub rejects files > 100 MB. Download it from Kaggle instead.
+data/BaseDataset.csv
+data/*.csv
+!data/.gitkeep
+
+# Trained models and bulky generated artifacts
+*.pkl
+*.pickle
+*.joblib
+outputs/models/
+outputs/test_predictions.csv
