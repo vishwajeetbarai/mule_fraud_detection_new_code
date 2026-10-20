@@ -68,3 +68,36 @@ LGB_PARAMS = dict(
 )
 LGB_EARLY_STOPPING_ROUNDS = 50
 SHAP_SAMPLE_SIZE = 5000
+
+# ----------------------------------------------------------------------------
+# Research Benchmark Extensions: Imbalance, Cost Matrix & Banking Compliance
+# ----------------------------------------------------------------------------
+# Focal Loss hyperparameters: FL(p_t) = -alpha_t * (1 - p_t)^gamma * log(p_t)
+FOCAL_GAMMA = 2.0
+FOCAL_ALPHA = 0.25
+
+# Banking Financial Loss Matrix (in currency units, e.g. USD / INR)
+# Aligned with Basel III Operational Risk & RBI Digital Lending Fair-Practice:
+# - COST_FN: Undetected mule account (credit bust-out / money laundering loss exposure)
+# - COST_FP: Cost of manual compliance investigation / customer verification friction
+# - COST_TP: Friction/step-up automated verification cost for true positive
+# - COST_TN: Cost of seamlessly approving legitimate customer (0)
+COST_FN = 1500.0
+COST_FP = 30.0
+COST_TP = 10.0
+COST_TN = 0.0
+
+# Imbalanced Resampling Strategy inside training folds:
+# Options: "none", "smote", "random_under", "hybrid"
+RESAMPLING_STRATEGY = "none"  # Default clean baseline; selectable via CLI
+RESAMPLING_RATIO = 0.05       # Target minority/majority ratio (0.05 = 5% fraud in resampled set)
+
+# Robustness & Adversarial Stress-Testing
+ADVERSARIAL_NOISE_LEVELS = [0.0, 0.05, 0.10, 0.20, 0.30]
+ADVERSARIAL_TARGET_FEATURES = [
+    "device_distinct_emails_8w",
+    "velocity_6h",
+    "session_length_in_minutes",
+    "proposed_credit_limit",
+]
+

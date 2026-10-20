@@ -74,14 +74,14 @@ flowchart TD
 
 | Step | What happens |
 |---|---|
-| Split | Time-based, never random. Train = months 0-4, validation = month 5, test = months 6-7. This mimics real life: learn from the past, face the future. |
-| Missing values | `-1` in 5 columns and negative `intended_balcon_amount` mean "unknown". They become NaN, plus a `_missing` flag column. |
-| Features | Velocity ratios (6h/24h/4w), credit limit to income, total address months, phone-valid count. Text columns are one-hot encoded using levels learned from the training months only. |
-| Dropped | `device_fraud_count` (always 0), `month` (split key only), and the target. |
-| Imbalance | `scale_pos_weight` (about 99) so the rare fraud class is not ignored. |
-| Threshold | Chosen on the validation month for about 5% false positives, then applied unchanged to the test months. |
-| Cross-validation | Expanding window: train on earlier months, test on the next month (months 3 to 7). |
-| Explainability | Gain importance for both models and SHAP for LightGBM. |
+| Split | Time-based, never random. Train = months 0-4, validation = month 5, test = months 6-7. Learn from the past, evaluate on unseen future. |
+| Missing values | `-1` in 5 columns and negative `intended_balcon_amount` mean "unknown". Converted to NaN, plus informative `_missing` indicator flags. |
+| Behavioral Graph & Velocity Features | Bipartite entity degree products (`device_distinct_emails_8w` × `dob_distinct_emails_4w`), graph hub centrality score, device recycling speed, velocity surge intensity, burst acceleration, credit leverage strain, and frozen training baseline drift z-scores. |
+| Imbalanced Learning | Specialized class weighting (`scale_pos_weight`) or custom binary Focal Loss (`--loss focal`), plus in-fold SMOTE resampling (`--resample smote`) strictly within training windows with zero leakage. |
+| Cost-Sensitive Optimization | Financial loss matrix ($C_{FN}=\$1500$, $C_{FP}=\$30$, $C_{TP}=\$10$) optimizing decision thresholds for minimum expected bank dollar loss and plotting operational cost curves. |
+| Statistical Significance | Exact asymptotic DeLong's test comparing correlated ROC-AUCs on the test set, plus paired Student's t-test and Wilcoxon signed-rank test across temporal CV folds with Cohen's d effect size. |
+| Adversarial Robustness | Evasion stress-testing across perturbation budgets $\varepsilon \in [0.05, 0.30]$ simulating fraudster device spoofing and velocity throttling. |
+| Regulatory XAI | Global SHAP summary bar/beeswarm, feature interaction dependence plots, and adverse action audit cards aligned with RBI Digital Lending Guidelines and Basel III / Fed SR 11-7 model risk governance. |
 
 ---
 
