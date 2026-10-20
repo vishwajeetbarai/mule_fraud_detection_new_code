@@ -382,71 +382,37 @@ export default function App() {
                 Mule Account Fraud Detection
               </span>
               <span className="text-xs text-slate-500 block">
-                NeurIPS 2022 Benchmark Suite · Model Governance Portal
+                NeurIPS 2022 Benchmark Suite
               </span>
             </div>
           </div>
 
-          {/* Zone 2: Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-600">
-            <button
-              onClick={() => {
-                if (pipelineState === 'insights') setActiveTab('overview');
-              }}
-              className={`hover:text-slate-900 transition-colors whitespace-nowrap ${
-                pipelineState === 'insights' && activeTab === 'overview' ? 'text-blue-600 font-semibold' : ''
-              }`}
-            >
-              Benchmark Insights
-            </button>
-            <button
-              onClick={() => {
-                if (pipelineState === 'insights') setActiveTab('ledger');
-              }}
-              className={`hover:text-slate-900 transition-colors whitespace-nowrap ${
-                pipelineState === 'insights' && activeTab === 'ledger' ? 'text-blue-600 font-semibold' : ''
-              }`}
-            >
-              Account Investigation
-            </button>
-            <button
-              onClick={() => {
-                if (pipelineState === 'insights') setActiveTab('graph');
-              }}
-              className={`hover:text-slate-900 transition-colors whitespace-nowrap ${
-                pipelineState === 'insights' && activeTab === 'graph' ? 'text-blue-600 font-semibold' : ''
-              }`}
-            >
-              Behavioral Graph Metrics
-            </button>
-            <button
-              onClick={() => {
-                if (pipelineState === 'insights') setActiveTab('cost');
-              }}
-              className={`hover:text-slate-900 transition-colors whitespace-nowrap ${
-                pipelineState === 'insights' && activeTab === 'cost' ? 'text-blue-600 font-semibold' : ''
-              }`}
-            >
-              Cost Matrix Optimization
-            </button>
-          </nav>
-
-          {/* Zone 3: Primary Action / Reset */}
+          {/* Zone 2: Status & Primary Action */}
           <div className="flex items-center space-x-3 shrink-0">
             {pipelineState === 'insights' ? (
-              <button
-                onClick={() => setPipelineState('idle')}
-                className="flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors whitespace-nowrap"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Upload Different Dataset</span>
-              </button>
+              <div className="flex items-center space-x-3">
+                <span className="text-xs text-slate-500 hidden sm:inline">
+                  {uploadedDatasetName} · {totalRowCount.toLocaleString()} rows
+                </span>
+                <button
+                  onClick={() => setPipelineState('idle')}
+                  className="flex items-center space-x-1.5 px-3.5 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-lg transition-colors whitespace-nowrap"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Upload New Dataset</span>
+                </button>
+              </div>
             ) : (
-              <span className="text-xs text-slate-500 font-medium">Ready for Ingestion</span>
+              <div className="flex items-center space-x-2 text-xs text-slate-500 font-medium">
+                <span>NeurIPS Bank Account Fraud (BAF)</span>
+                <span>·</span>
+                <span>Ready for Ingestion</span>
+              </div>
             )}
           </div>
         </div>
       </header>
+
 
       {/* Main Content Viewport */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
