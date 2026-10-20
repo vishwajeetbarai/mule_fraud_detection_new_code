@@ -4,10 +4,6 @@ Fraud detection with **XGBoost** and **LightGBM** on the real
 [Bank Account Fraud](https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022)
 benchmark (`BaseDataset.csv`). **No synthetic or mock data is used anywhere in this repo.**
 
-> Scope note: this dataset is about **fraud at account opening** (is this new
-> application fraudulent?). It does not contain transaction graphs, so this project
-> does not do money-flow / mule-network analysis.
-
 ---
 
 ## 1. Dataset
