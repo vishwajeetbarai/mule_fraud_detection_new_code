@@ -1,0 +1,17 @@
+policy,month,model,drift_detected,alert_features,trigger_reason,score_psi
+baseline,6,LightGBM,True,velocity_6h,Features drifted: ['velocity_6h'],0.0033998565307262257
+baseline,7,LightGBM,True,"velocity_6h, name_email_similarity","Features drifted: ['velocity_6h', 'name_email_similarity']",0.012335647467426374
+drift_monitoring,6,LightGBM,True,velocity_6h,Features drifted: ['velocity_6h'],0.0033998565307262257
+drift_monitoring,7,LightGBM,True,"velocity_6h, name_email_similarity","Features drifted: ['velocity_6h', 'name_email_similarity']",0.012335647467426374
+tdta,6,LightGBM,True,velocity_6h,Features drifted: ['velocity_6h'],0.0033998565307262257
+tdta,7,LightGBM,True,"velocity_6h, name_email_similarity","Features drifted: ['velocity_6h', 'name_email_similarity']",0.012335647467426374
+scheduled,6,LightGBM,True,velocity_6h,Features drifted: ['velocity_6h'],0.0033998565307262257
+scheduled,7,LightGBM,True,"velocity_6h, name_email_similarity","Features drifted: ['velocity_6h', 'name_email_similarity']",0.012335647467426374
+baseline,6,XGBoost,True,velocity_6h,Features drifted: ['velocity_6h'],0.006228433956109617
+baseline,7,XGBoost,True,"velocity_6h, name_email_similarity","Features drifted: ['velocity_6h', 'name_email_similarity']",0.07928293347677293
+drift_monitoring,6,XGBoost,True,velocity_6h,Features drifted: ['velocity_6h'],0.006228433956109617
+drift_monitoring,7,XGBoost,True,"velocity_6h, name_email_similarity","Features drifted: ['velocity_6h', 'name_email_similarity']",0.07928293347677293
+tdta,6,XGBoost,True,velocity_6h,Features drifted: ['velocity_6h'],0.006228433956109617
+tdta,7,XGBoost,True,"velocity_6h, name_email_similarity","Features drifted: ['velocity_6h', 'name_email_similarity']",0.07928293347677293
+scheduled,6,XGBoost,True,velocity_6h,Features drifted: ['velocity_6h'],0.006228433956109617
+scheduled,7,XGBoost,True,"velocity_6h, name_email_similarity","Features drifted: ['velocity_6h', 'name_email_similarity']",0.07928293347677293

@@ -1,0 +1,5 @@
+period_id,previous_threshold,updated_threshold,threshold_changed,trigger_reason,n_calibration_samples,n_calibration_positives,n_calibration_negatives,target_fpr,calib_realized_fpr,calib_realized_tpr,status,policy,model
+7,0.7384824072044696,0.7703491583995089,True,drift_alert: Features drifted: ['velocity_6h'],108168,1450,106718,0.05,0.050000937049045145,0.5048275862068966,RECALIBRATED_SUCCESSFULLY,tdta,LightGBM
+7,0.7384824072044696,0.7703491583995089,True,scheduled_periodic,108168,1450,106718,0.05,0.050000937049045145,0.5048275862068966,RECALIBRATED_SUCCESSFULLY,scheduled,LightGBM
+7,0.6824703216552734,0.7181277394294738,True,drift_alert: Features drifted: ['velocity_6h'],108168,1450,106718,0.05,0.050000937049045145,0.5186206896551724,RECALIBRATED_SUCCESSFULLY,tdta,XGBoost
+7,0.6824703216552734,0.7181277394294738,True,scheduled_periodic,108168,1450,106718,0.05,0.050000937049045145,0.5186206896551724,RECALIBRATED_SUCCESSFULLY,scheduled,XGBoost

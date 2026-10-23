@@ -1,0 +1,112 @@
+{
+  "timestamp": "2026-10-23T07:02:02Z",
+  "dataset": "D:\\Downloads\\SET Project\\mule_newcode\\data\\BaseDataset.csv",
+  "target_fpr": 0.05,
+  "sample_frac": null,
+  "comparison": [
+    {
+      "model": "LightGBM",
+      "policy": "baseline",
+      "overall_Recall": 0.5250173731758165,
+      "overall_Realized_FPR": 0.051619478264311125,
+      "FPR_deviation_from_target": 0.0016194782643111222,
+      "overall_Precision": 0.12649644202595228,
+      "overall_F1": 0.20387236052081226,
+      "total_drift_alerts": 2,
+      "total_threshold_updates": 0,
+      "initial_threshold": 0.7384824072044696,
+      "final_threshold": 0.7384824072044696
+    },
+    {
+      "model": "LightGBM",
+      "policy": "drift_monitoring",
+      "overall_Recall": 0.5250173731758165,
+      "overall_Realized_FPR": 0.051619478264311125,
+      "FPR_deviation_from_target": 0.0016194782643111222,
+      "overall_Precision": 0.12649644202595228,
+      "overall_F1": 0.20387236052081226,
+      "total_drift_alerts": 2,
+      "total_threshold_updates": 0,
+      "initial_threshold": 0.7384824072044696,
+      "final_threshold": 0.7384824072044696
+    },
+    {
+      "model": "LightGBM",
+      "policy": "tdta",
+      "overall_Recall": 0.5093815149409312,
+      "overall_Realized_FPR": 0.048329565187277684,
+      "FPR_deviation_from_target": 0.0016704348127223184,
+      "overall_Precision": 0.13048509123275479,
+      "overall_F1": 0.20775171827393182,
+      "total_drift_alerts": 2,
+      "total_threshold_updates": 1,
+      "initial_threshold": 0.7384824072044696,
+      "final_threshold": 0.7703491583995089
+    },
+    {
+      "model": "LightGBM",
+      "policy": "scheduled",
+      "overall_Recall": 0.5093815149409312,
+      "overall_Realized_FPR": 0.048329565187277684,
+      "FPR_deviation_from_target": 0.0016704348127223184,
+      "overall_Precision": 0.13048509123275479,
+      "overall_F1": 0.20775171827393182,
+      "total_drift_alerts": 2,
+      "total_threshold_updates": 1,
+      "initial_threshold": 0.7384824072044696,
+      "final_threshold": 0.7703491583995089
+    },
+    {
+      "model": "XGBoost",
+      "policy": "baseline",
+      "overall_Recall": 0.5198054204308548,
+      "overall_Realized_FPR": 0.04787441931797381,
+      "FPR_deviation_from_target": 0.0021255806820261944,
+      "overall_Precision": 0.1338942092544527,
+      "overall_F1": 0.2129385808839228,
+      "total_drift_alerts": 2,
+      "total_threshold_updates": 0,
+      "initial_threshold": 0.6824703216552734,
+      "final_threshold": 0.6824703216552734
+    },
+    {
+      "model": "XGBoost",
+      "policy": "drift_monitoring",
+      "overall_Recall": 0.5198054204308548,
+      "overall_Realized_FPR": 0.04787441931797381,
+      "FPR_deviation_from_target": 0.0021255806820261944,
+      "overall_Precision": 0.1338942092544527,
+      "overall_F1": 0.2129385808839228,
+      "total_drift_alerts": 2,
+      "total_threshold_updates": 0,
+      "initial_threshold": 0.6824703216552734,
+      "final_threshold": 0.6824703216552734
+    },
+    {
+      "model": "XGBoost",
+      "policy": "tdta",
+      "overall_Recall": 0.5024322446143155,
+      "overall_Realized_FPR": 0.04518806924153899,
+      "FPR_deviation_from_target": 0.004811930758461015,
+      "overall_Precision": 0.13667296786389413,
+      "overall_F1": 0.21489077128845296,
+      "total_drift_alerts": 2,
+      "total_threshold_updates": 1,
+      "initial_threshold": 0.6824703216552734,
+      "final_threshold": 0.7181277394294738
+    },
+    {
+      "model": "XGBoost",
+      "policy": "scheduled",
+      "overall_Recall": 0.5024322446143155,
+      "overall_Realized_FPR": 0.04518806924153899,
+      "FPR_deviation_from_target": 0.004811930758461015,
+      "overall_Precision": 0.13667296786389413,
+      "overall_F1": 0.21489077128845296,
+      "total_drift_alerts": 2,
+      "total_threshold_updates": 1,
+      "initial_threshold": 0.6824703216552734,
+      "final_threshold": 0.7181277394294738
+    }
+  ]
+}
