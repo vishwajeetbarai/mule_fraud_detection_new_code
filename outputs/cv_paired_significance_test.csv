@@ -1,0 +1,2 @@
+metric,mean_model_a,mean_model_b,mean_diff,paired_t_stat,paired_t_pvalue,wilcoxon_stat,wilcoxon_pvalue,cohens_d
+PR_AUC,0.1694066920488259,0.1716959763988047,-0.0022892843499788262,-1.3661854911962457,0.2436467442899196,2.0,0.1875,-0.6109765625769832
