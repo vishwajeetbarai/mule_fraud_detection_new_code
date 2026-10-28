@@ -54,11 +54,53 @@ def test_behavioral_graph_and_drift_features(df):
     # Check that behavioral graph and drift features exist
     expected_feats = [
         "device_sharing_density", "device_recycling_speed", "graph_hub_degree_proxy",
-        "velocity_surge_intensity", "proposed_credit_to_balcon", "velocity_6h_drift_zscore"
+        "velocity_surge_intensity", "proposed_credit_to_balcon", "velocity_6h_drift_zscore",
+        "velocity_spike_index", "velocity_momentum_spike", "fraud_ring_network_density",
+        "ring_clique_density_proxy", "device_to_address_collision_ratio"
     ]
     for ef in expected_feats:
         assert ef in X.columns, f"Missing engineered feature: {ef}"
         assert not X[ef].isna().any(), f"NaN values found in {ef}"
+
+
+def test_concept_drift_tracker(df):
+    from drift import ConceptDriftTracker, compute_psi, compute_ks_test
+    import numpy as np
+
+    tr, va, _ = temporal_split(df)
+    tracker = ConceptDriftTracker(features_to_monitor=["velocity_6h", "credit_risk_score"])
+    tracker.fit(tr)
+    rep = tracker.evaluate_batch(va, batch_name="val_test")
+    assert not rep.empty
+    assert "psi" in rep.columns
+    assert "ks_statistic" in rep.columns
+    assert "drift_status" in rep.columns
+    assert (rep["psi"] >= 0).all()
+
+    # Synthetic sanity test on PSI
+    ref = np.random.normal(0, 1, 1000)
+    shifted = np.random.normal(2, 1, 1000)
+    psi_drift, _ = compute_psi(ref, shifted)
+    psi_stable, _ = compute_psi(ref, ref)
+    assert psi_drift > 0.25
+    assert psi_stable < 0.05
+
+
+def test_fairness_bias_audit(df):
+    import evaluation as ev
+    import numpy as np
+    import pandas as pd
+
+    y_true = np.array([0]*80 + [1]*20)
+    proba = np.concatenate([np.random.uniform(0.01, 0.2, 80), np.random.uniform(0.4, 0.9, 20)])
+    slices = pd.Series(["GroupA"]*50 + ["GroupB"]*50)
+
+    report = ev.evaluate_fairness_bias_audit(y_true, proba, threshold=0.3, slice_series=slices, slice_name="test_group")
+    assert not report.empty
+    assert "disparate_impact_ratio" in report.columns
+    assert "four_fifths_compliant" in report.columns
+    assert "statistical_parity_diff" in report.columns
+    assert set(report["group"].unique()) == {"GroupA", "GroupB"}
 
 
 def test_delong_test_synthetic():

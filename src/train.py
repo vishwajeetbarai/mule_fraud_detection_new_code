@@ -28,6 +28,7 @@ import config
 import evaluation as ev
 from data_loader import describe, load_base_dataset, temporal_split
 from features import FeaturePreprocessor
+from drift import ConceptDriftTracker
 
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", message=".*eval_set.*deprecated.*")
@@ -355,7 +356,7 @@ def main():
         "CI_95_Upper": delong_res["ci_95"][1],
     }])
     delong_df.to_csv(out_dir / "delong_roc_test_results.csv", index=False)
-    print(f"  DeLong's Test: ΔAUC={delong_res['auc_difference']:+.4f} | "
+    print(f"  DeLong's Test: Delta_AUC={delong_res['auc_difference']:+.4f} | "
           f"z={delong_res['z_statistic']:.3f} | p={delong_res['p_value']:.4e} "
           f"(Significant: {delong_res['statistically_significant_05']})")
 
@@ -395,6 +396,83 @@ def main():
     ev.plot_importance(pd.read_csv(out_dir / "feature_importance_lightgbm.csv"), "gain",
                        "LightGBM Feature Importance (Gain)",
                        out_dir / "lightgbm_feature_importance.png")
+
+    # ------------------------------------------------------------------------
+    # Concept Drift Detection Audit (Training vs Validation / Test Batches)
+    # ------------------------------------------------------------------------
+    print("\n[Concept Drift Detection: Population Stability Index & Feature Shift]")
+    drift_tracker = ConceptDriftTracker(
+        features_to_monitor=config.DRIFT_MONITORING_FEATURES,
+        psi_threshold=config.DRIFT_PSI_THRESHOLD,
+        alpha_pvalue=config.DRIFT_MAX_PVALUE_ALPHA,
+    )
+    # Fit reference on training split with model probability baseline
+    p_tr_best = models[best].predict_proba(X_tr)[:, 1]
+    drift_tracker.fit(reference_df=train, reference_scores=p_tr_best)
+
+    # Evaluate validation month drift
+    drift_val_rep = drift_tracker.evaluate_batch(
+        target_df=valid,
+        target_scores=models[best].predict_proba(X_va)[:, 1],
+        batch_name=f"Validation_Month_{config.VALID_MONTHS[0]}",
+    )
+    # Evaluate temporal test months drift
+    drift_test_rep = drift_tracker.evaluate_batch(
+        target_df=test,
+        target_scores=probas[best],
+        batch_name=f"Test_Months_{config.TEST_MONTHS[0]}_{config.TEST_MONTHS[1]}",
+    )
+    drift_summary = pd.concat([drift_val_rep, drift_test_rep], ignore_index=True)
+    drift_summary.to_csv(out_dir / "concept_drift_audit_summary.csv", index=False)
+    print(f"  Concept Drift Audit saved -> concept_drift_audit_summary.csv")
+    for _, d_row in drift_test_rep.iterrows():
+        print(f"    Feature: {d_row['feature']:26s} | PSI: {d_row['psi']:.4f} "
+              f"| KS Stat: {d_row['ks_statistic']:.4f} (p={d_row['ks_pvalue']:.3e}) "
+              f"| Status: {d_row['drift_status']}")
+
+    # ------------------------------------------------------------------------
+    # Model Fairness & Demographic Bias Audit (Disparate Impact & Parity)
+    # ------------------------------------------------------------------------
+    print("\n[Model Fairness & Demographic Bias Audit]")
+    best_thr = val_fpr_thresholds[best]
+    # 1. Customer Age Bins
+    if "customer_age" in test.columns:
+        age_bins = pd.cut(
+            test["customer_age"],
+            bins=[0, 25, 35, 50, 65, 120],
+            labels=["<25", "25-35", "35-50", "50-65", "65+"]
+        )
+        fairness_age = ev.evaluate_fairness_bias_audit(
+            y_true=y_te,
+            proba=probas[best],
+            threshold=best_thr,
+            slice_series=age_bins,
+            slice_name="customer_age_group",
+        )
+        fairness_age.to_csv(out_dir / "fairness_audit_customer_age.csv", index=False)
+        ev.plot_fairness_audit(fairness_age, "Customer Age Groups", out_dir / "fairness_audit_age.png")
+        print("  Customer Age Group Audit:")
+        for _, f_row in fairness_age.iterrows():
+            print(f"    Age {f_row['group']:6s} | Size: {f_row['sample_size']:6d} ({f_row['sample_pct']:4.1f}%) "
+                  f"| Approval Rate: {f_row['approval_rate']:.3f} | Disparate Impact: {f_row['disparate_impact_ratio']:.3f} "
+                  f"| 80%-Compliant: {f_row['four_fifths_compliant']}")
+
+    # 2. Device Operating System Slices
+    if "device_os" in test.columns:
+        fairness_os = ev.evaluate_fairness_bias_audit(
+            y_true=y_te,
+            proba=probas[best],
+            threshold=best_thr,
+            slice_series=test["device_os"],
+            slice_name="device_os",
+        )
+        fairness_os.to_csv(out_dir / "fairness_audit_device_os.csv", index=False)
+        ev.plot_fairness_audit(fairness_os, "Device Operating System", out_dir / "fairness_audit_device_os.png")
+        print("  Device OS Audit:")
+        for _, f_row in fairness_os.iterrows():
+            print(f"    OS {f_row['group']:8s} | Size: {f_row['sample_size']:6d} ({f_row['sample_pct']:4.1f}%) "
+                  f"| Approval Rate: {f_row['approval_rate']:.3f} | Disparate Impact: {f_row['disparate_impact_ratio']:.3f} "
+                  f"| 80%-Compliant: {f_row['four_fifths_compliant']}")
 
     # ------------------------------------------------------------------------
     # Adversarial Robustness & Concept Drift Stress Testing

@@ -1,0 +1,15 @@
+batch,feature,psi,ks_statistic,ks_pvalue,ks_significant,ref_mean,target_mean,mean_shift,drift_status
+Validation_Month_5,velocity_6h,0.3854,0.2711,0.0,True,6389.3067,4770.3796,-1618.9271,SIGNIFICANT_DRIFT
+Validation_Month_5,credit_risk_score,0.1519,0.1402,1.9259085983138354e-87,True,124.85,141.942,17.092,MODERATE_DRIFT
+Validation_Month_5,proposed_credit_limit,0.0434,0.0672,2.4904626634491618e-20,True,536.0836,475.1559,-60.9278,STABLE
+Validation_Month_5,income,0.0201,0.0613,5.3732782599796924e-17,True,0.541,0.5806,0.0396,STABLE
+Validation_Month_5,name_email_similarity,0.165,0.0973,2.991292954411233e-42,True,0.5057,0.4807,-0.025,MODERATE_DRIFT
+Validation_Month_5,session_length_in_minutes,0.0935,0.1117,1.5184082776313667e-55,True,7.8539,6.5714,-1.2825,STABLE
+Validation_Month_5,__model_score__,0.0039,0.0164,0.12760088734627206,False,0.218,0.2102,-0.0078,STABLE
+Test_Months_6_7,velocity_6h,1.1282,0.4467,0.0,True,6389.3067,3767.3311,-2621.9756,SIGNIFICANT_DRIFT
+Test_Months_6_7,credit_risk_score,0.2681,0.1839,3.4130528417008565e-233,True,124.85,146.112,21.262,SIGNIFICANT_DRIFT
+Test_Months_6_7,proposed_credit_limit,0.0748,0.0813,1.0516774331064319e-45,True,536.0836,474.6771,-61.4066,STABLE
+Test_Months_6_7,income,0.0762,0.121,7.128069960781902e-101,True,0.541,0.6201,0.0791,STABLE
+Test_Months_6_7,name_email_similarity,0.0478,0.0653,1.340019550175964e-29,True,0.5057,0.4703,-0.0354,STABLE
+Test_Months_6_7,session_length_in_minutes,0.0575,0.09,7.514552693386079e-56,True,7.8539,6.883,-0.9709,STABLE
+Test_Months_6_7,__model_score__,0.0117,0.0444,6.809130170787242e-14,True,0.218,0.2069,-0.0112,STABLE

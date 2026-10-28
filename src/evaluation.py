@@ -407,3 +407,138 @@ def plot_importance(imp_df, value_col, title, path, top=20):
     plt.barh(top_df["feature"], top_df[value_col])
     plt.title(title); plt.tight_layout(); plt.savefig(path, dpi=150); plt.close()
 
+
+# ----------------------------------------------------------------------------
+# 5. Model Fairness & Algorithmic Bias Audit (Disparate Impact & Parity)
+# ----------------------------------------------------------------------------
+def evaluate_fairness_bias_audit(
+    y_true: np.ndarray,
+    proba: np.ndarray,
+    threshold: float,
+    slice_series: pd.Series,
+    slice_name: str = "customer_age",
+    favorable_outcome: int = 0,  # 0 = approved (non-fraudulent), 1 = flagged
+) -> pd.DataFrame:
+    """Compute comprehensive fairness metrics across sensitive customer demographic/device slices.
+
+    Metrics calculated per subgroup:
+    - Sample Count & Selection (Approval) Rate
+    - Disparate Impact (Four-Fifths / 80% Rule against reference group with highest selection rate)
+    - Statistical Parity Difference (Approval Rate difference vs Reference)
+    - Equal Opportunity Difference (True Positive / True Negative rate differences)
+    - False Positive Rate (FPR) parity across slices
+
+    Parameters
+    ----------
+    y_true : np.ndarray
+        Ground truth binary fraud labels.
+    proba : np.ndarray
+        Model predicted fraud probabilities.
+    threshold : float
+        Decision threshold used for classification.
+    slice_series : pd.Series
+        Categorical or binned series representing demographic/device attributes.
+    slice_name : str
+        Name of the protected or sensitive slice.
+    favorable_outcome : int
+        Whether approval (0) or detection (1) is treated as the favorable outcome.
+
+    Returns
+    -------
+    pd.DataFrame
+        Audit report per slice category with Disparate Impact and Parity metrics.
+    """
+    y_true = np.asarray(y_true)
+    proba = np.asarray(proba)
+    pred_flagged = (proba >= threshold).astype(int)
+    # Favorable outcome: application approved (not flagged as fraud)
+    pred_favorable = (pred_flagged == favorable_outcome).astype(int)
+
+    df_audit = pd.DataFrame({
+        "group": slice_series.astype(str).values,
+        "y_true": y_true,
+        "flagged": pred_flagged,
+        "favorable": pred_favorable,
+        "score": proba,
+    })
+
+    groups = sorted(df_audit["group"].unique())
+    records = []
+
+    for grp in groups:
+        sub = df_audit[df_audit["group"] == grp]
+        n_total = len(sub)
+        if n_total == 0:
+            continue
+
+        n_fav = int(sub["favorable"].sum())
+        selection_rate = n_fav / n_total
+
+        # Error rates per group
+        tn, fp, fn, tp = confusion_matrix(sub["y_true"], sub["flagged"], labels=[0, 1]).ravel()
+        tpr = tp / max(tp + fn, 1)  # Fraud recall
+        fpr = fp / max(fp + tn, 1)  # False alert rate
+        tnr = tn / max(tn + fp, 1)  # Legitimate approval rate (Equal Opportunity for legitimate borrowers)
+
+        records.append({
+            "slice_name": slice_name,
+            "group": grp,
+            "sample_size": n_total,
+            "sample_pct": round(n_total / len(df_audit) * 100.0, 2),
+            "approval_rate": round(selection_rate, 4),
+            "fraud_rate": round(float(sub["y_true"].mean()), 4),
+            "mean_fraud_score": round(float(sub["score"].mean()), 4),
+            "tpr_fraud_recall": round(tpr, 4),
+            "fpr_false_alarm": round(fpr, 4),
+            "legitimate_approval_tpr": round(tnr, 4),
+        })
+
+    rep_df = pd.DataFrame(records)
+    if rep_df.empty:
+        return rep_df
+
+    # Reference group is group with maximum approval rate
+    ref_idx = rep_df["approval_rate"].idxmax()
+    ref_rate = rep_df.loc[ref_idx, "approval_rate"]
+    ref_group = rep_df.loc[ref_idx, "group"]
+
+    # Disparate Impact (DI) = Group Approval Rate / Reference Approval Rate
+    rep_df["reference_group"] = ref_group
+    rep_df["disparate_impact_ratio"] = rep_df["approval_rate"] / max(ref_rate, 1e-6)
+    rep_df["statistical_parity_diff"] = rep_df["approval_rate"] - ref_rate
+
+    # Equal Employment Opportunity Commission (EEOC) 80% Rule (0.80 - 1.25)
+    rep_df["four_fifths_compliant"] = rep_df["disparate_impact_ratio"] >= 0.80
+
+    return rep_df
+
+
+def plot_fairness_audit(fairness_df: pd.DataFrame, title: str, output_path: str):
+    """Plot Disparate Impact and Statistical Parity across demographic slices."""
+    if fairness_df.empty:
+        return
+
+    fig, ax1 = plt.subplots(figsize=(8.5, 4.8))
+    groups = fairness_df["group"].astype(str)
+    x = np.arange(len(groups))
+    width = 0.35
+
+    ax1.bar(x - width/2, fairness_df["disparate_impact_ratio"], width, label="Disparate Impact Ratio", color="#1f77b4", alpha=0.85)
+    ax1.axhline(0.80, color="crimson", linestyle="--", linewidth=1.5, label="80% Rule Threshold (EEOC)")
+    ax1.axhline(1.00, color="black", linestyle=":", linewidth=1.0)
+    ax1.set_ylabel("Disparate Impact Ratio (Approved / Ref Rate)")
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(groups, rotation=20, ha="right")
+    ax1.set_ylim(0, max(1.25, float(fairness_df["disparate_impact_ratio"].max() * 1.15)))
+
+    ax2 = ax1.twinx()
+    ax2.plot(x, fairness_df["fpr_false_alarm"] * 100, color="#d62728", marker="o", linewidth=2, label="FPR (False Alarm %)")
+    ax2.set_ylabel("False Positive Rate (%)", color="#d62728")
+    ax2.tick_params(axis="y", labelcolor="#d62728")
+
+    plt.title(f"Fairness & Demographic Bias Audit: {title}", fontsize=11, fontweight="bold")
+    fig.tight_layout()
+    plt.savefig(output_path, dpi=150)
+    plt.close()
+
+
