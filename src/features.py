@@ -53,6 +53,17 @@ class FeaturePreprocessor:
         df["velocity_burst_acceleration"] = (df["velocity_6h"] / 6.0) - (df["velocity_24h"] / 24.0)
         # Daily rate vs 4-week background rate
         df["velocity_daily_vs_monthly"] = (df["velocity_24h"] / 1.0) / ((df["velocity_4w"] / 28.0) + eps)
+        # Velocity Spike Index: acute short-term spike scaled non-linearly over monthly baseline
+        vel_6h_clean = df["velocity_6h"].fillna(0).clip(lower=0)
+        vel_24h_clean = df["velocity_24h"].fillna(0).clip(lower=0)
+        vel_4w_clean = df["velocity_4w"].fillna(0).clip(lower=0)
+
+        df["velocity_spike_index"] = (vel_6h_clean ** 1.5) / ((vel_4w_clean + 1.0) ** 0.5 + eps)
+        # Velocity Momentum Derivative: change in hourly rate normalized by monthly background
+        hourly_6h = vel_6h_clean / 6.0
+        hourly_24h = vel_24h_clean / 24.0
+        hourly_4w = vel_4w_clean / (28.0 * 24.0)
+        df["velocity_momentum_spike"] = (hourly_6h - hourly_24h) / (hourly_4w + eps)
 
         # 2. Behavioral Graph & Bipartite Entity Projections
         # Bipartite entity node degree product: device-email collisions x DOB-email collisions
@@ -74,6 +85,19 @@ class FeaturePreprocessor:
         )
         # Geographic vs institutional dispersion
         df["geo_branch_dispersion_ratio"] = zip_deg / (branch_deg + 1.0)
+
+        # Fraud Ring Syndicate & Network Density Indicators:
+        # Cross-entity co-occurrence clustering: high email reuse across distinct devices and DOBs
+        df["fraud_ring_network_density"] = (
+            (device_deg * dob_deg * (zip_deg + 1.0)) ** (1.0 / 3.0)
+        )
+        # Mule Ring Clustering Coefficient proxy: triangles/cliques formed by shared device & geographic cluster
+        df["ring_clique_density_proxy"] = (
+            (device_deg * (device_deg - 1.0).clip(lower=0)) / 2.0
+            + (dob_deg * (dob_deg - 1.0).clip(lower=0)) / 2.0
+        ) / (np.log1p(zip_deg + branch_deg) + 1.0)
+        # Device-to-Address multiplex collision ratio (indicative of organized mule houses)
+        df["device_to_address_collision_ratio"] = device_deg / (df["current_address_months_count"].fillna(0) + 1.0)
 
         # 3. Cross-Channel Consistency & Financial Exposure
         df["credit_limit_to_income"] = df["proposed_credit_limit"] / (df["income"] + eps)
@@ -99,11 +123,11 @@ class FeaturePreprocessor:
         df["bank_tenure_to_age_ratio"] = df["bank_months_count"].fillna(0) / (df["customer_age"] * 12.0 + eps)
 
         # 5. Temporal Drift Adjustments (using baseline frozen during fit)
-        if self.historical_stats_:
-            for col in ["velocity_6h", "proposed_credit_limit", "credit_risk_score"]:
-                mean = self.historical_stats_.get(f"{col}_mean", 0.0)
-                std = self.historical_stats_.get(f"{col}_std", 1.0)
-                df[f"{col}_drift_zscore"] = (df[col] - mean) / (std + eps)
+        for col in ["velocity_6h", "proposed_credit_limit", "credit_risk_score"]:
+            mean = self.historical_stats_.get(f"{col}_mean", 0.0)
+            std = self.historical_stats_.get(f"{col}_std", 1.0)
+            clean_col = df[col].fillna(mean) if col in df.columns else mean
+            df[f"{col}_drift_zscore"] = (clean_col - mean) / (std + eps)
 
         return df
 

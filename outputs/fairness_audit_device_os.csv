@@ -1,0 +1,6 @@
+slice_name,group,sample_size,sample_pct,approval_rate,fraud_rate,mean_fraud_score,tpr_fraud_recall,fpr_false_alarm,legitimate_approval_tpr,reference_group,disparate_impact_ratio,statistical_parity_diff,four_fifths_compliant
+device_os,linux,3284,32.04,0.9772,0.0079,0.1648,0.2308,0.0212,0.9788,linux,1.0,0.0,True
+device_os,macintosh,521,5.08,0.9539,0.0192,0.1906,0.3,0.0411,0.9589,linux,0.9761563651248465,-0.023299999999999987,True
+device_os,other,3909,38.14,0.9719,0.0095,0.1737,0.1892,0.0266,0.9734,linux,0.9945763405648793,-0.005299999999999971,True
+device_os,windows,2472,24.12,0.8293,0.0332,0.3194,0.6098,0.1556,0.8444,linux,0.8486492018010643,-0.14789999999999992,True
+device_os,x11,64,0.62,0.9688,0.0,0.173,0.0,0.0312,0.9688,linux,0.9914040114613181,-0.008399999999999963,True

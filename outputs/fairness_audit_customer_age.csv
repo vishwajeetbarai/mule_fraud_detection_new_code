@@ -1,0 +1,6 @@
+slice_name,group,sample_size,sample_pct,approval_rate,fraud_rate,mean_fraud_score,tpr_fraud_recall,fpr_false_alarm,legitimate_approval_tpr,reference_group,disparate_impact_ratio,statistical_parity_diff,four_fifths_compliant
+customer_age_group,25-35,3208,31.3,0.957,0.0122,0.1827,0.4103,0.0385,0.9615,<25,0.9691139240506328,-0.030500000000000083,True
+customer_age_group,35-50,4076,39.77,0.8994,0.0177,0.2495,0.5278,0.0929,0.9071,<25,0.9107848101265822,-0.08810000000000007,True
+customer_age_group,50-65,338,3.3,0.8728,0.0414,0.3035,0.5,0.1111,0.8889,<25,0.8838481012658228,-0.11470000000000002,True
+customer_age_group,65+,71,0.69,0.8592,0.0563,0.3075,0.5,0.1194,0.8806,<25,0.8700759493670885,-0.12830000000000008,True
+customer_age_group,<25,2557,24.95,0.9875,0.0102,0.1536,0.1154,0.0115,0.9885,<25,1.0,0.0,True
