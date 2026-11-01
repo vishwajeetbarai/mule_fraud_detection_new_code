@@ -99,6 +99,12 @@ class FeaturePreprocessor:
         # Device-to-Address multiplex collision ratio (indicative of organized mule houses)
         df["device_to_address_collision_ratio"] = device_deg / (df["current_address_months_count"].fillna(0) + 1.0)
 
+        # Multi-Hop Bipartite Ego-Network Projections:
+        df["bipartite_2hop_device_branch"] = np.log1p(device_deg * branch_deg)
+        total_deg = device_deg + dob_deg + zip_deg + branch_deg
+        df["ego_network_density_ratio"] = (device_deg * dob_deg + zip_deg * branch_deg) / (total_deg + 1.0)
+        df["heterogeneous_hub_centrality"] = (0.4 * np.log1p(device_deg) + 0.3 * np.log1p(dob_deg) + 0.2 * np.log1p(zip_deg) + 0.1 * np.log1p(branch_deg)) / (session_len + 1.0)
+
         # 3. Cross-Channel Consistency & Financial Exposure
         df["credit_limit_to_income"] = df["proposed_credit_limit"] / (df["income"] + eps)
         intended_bal = df["intended_balcon_amount"].fillna(0).clip(lower=0)

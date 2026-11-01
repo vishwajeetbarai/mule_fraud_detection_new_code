@@ -1,0 +1,7 @@
+decision_point_t,current_month,next_month,delay_days,policy,total_available_labels,newly_verified_from_month_m,unverified_pending_from_month_m,active_threshold,drift_detected,recalibration_triggered,scenario
+210.0,6,7,0.0,Static,227491,108168,0,0.7568666915481376,True,False,Scenario A: Static Validation Threshold
+210.0,6,7,0.0,TDTA,227491,108168,0,0.7568666915481376,True,True,Scenario B: TDTA (0-Day Delay)
+210.0,6,7,7.0,TDTA,202252,82929,25239,0.7568666915481376,True,True,Scenario C: TDTA (7-Day Delay)
+210.0,6,7,14.0,TDTA,177013,57690,50478,0.7568666915481376,True,True,Scenario D: TDTA (14-Day Delay)
+210.0,6,7,30.0,TDTA,119323,0,108168,0.7568666915481376,True,True,Scenario E: TDTA (30-Day Delay)
+210.0,6,7,60.0,TDTA,119323,0,108168,0.7568666915481376,True,True,Scenario F: TDTA (60-Day Delay)

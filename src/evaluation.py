@@ -102,18 +102,24 @@ def optimize_cost_threshold(y_true, proba, cost_fn=config.COST_FN, cost_fp=confi
     }
 
 
-def plot_cost_curve(y_true, probas, cost_fn, cost_fp, path):
-    """Plot operational loss curves per application across decision thresholds."""
+def plot_cost_curve(y_true, probas, cost_fn, cost_fp, path, frozen_thresholds=None):
+    """Plot operational loss curves per application across decision thresholds.
+    
+    If frozen_thresholds is provided (dict of model_name -> threshold selected on validation),
+    marks the validation-selected operating point on the out-of-sample test cost curve.
+    """
     plt.figure(figsize=(7, 5))
     for name, p in probas.items():
         res = optimize_cost_threshold(y_true, p, cost_fn=cost_fn, cost_fp=cost_fp)
+        thr_marker = frozen_thresholds.get(name, res["optimal_threshold"]) if frozen_thresholds else res["optimal_threshold"]
+        c_at_thr = compute_cost_matrix(y_true, (p >= thr_marker).astype(int), cost_fn=cost_fn, cost_fp=cost_fp)["cost_per_application"]
         plt.plot(res["threshold_grid"], res["cost_curve"],
-                 label=f"{name} (Min Cost=${res['min_cost_per_app']:.2f} @ thr={res['optimal_threshold']:.3f})")
-        plt.scatter([res["optimal_threshold"]], [res["min_cost_per_app"]], s=60, zorder=5)
+                 label=f"{name} (Cost=${c_at_thr:.2f} @ val-thr={thr_marker:.3f})")
+        plt.scatter([thr_marker], [c_at_thr], s=60, zorder=5)
 
     plt.xlabel("Decision Threshold (Probability)")
     plt.ylabel(f"Operational Cost per Application ($)")
-    plt.title(f"Cost-Sensitive Optimization Curve\n(FN Cost=${cost_fn:.0f}, FP Investigation=${cost_fp:.0f})")
+    plt.title(f"Cost-Sensitive Loss Curve (Test Set)\n(FN Cost=${cost_fn:.0f}, FP Investigation=${cost_fp:.0f})")
     plt.legend()
     plt.grid(alpha=0.3)
     plt.tight_layout()

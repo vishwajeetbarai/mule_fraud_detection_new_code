@@ -1,0 +1,4 @@
+scenario,cost_fn,cost_fp,cost_tp,val_selected_threshold,val_expected_cost_per_app,realized_test_cost_per_app,default_05_test_cost_per_app,savings_pct_vs_default,test_precision,test_recall,test_fpr,test_tp,test_fp,test_fn,test_tn
+Scenario_A_LowFN_HighFP,500.0,100.0,10.0,0.9254,5.27,6.33,15.86,60.1,0.2894,0.2022,0.0071,582,1429,2296,200704
+Scenario_B_HighFN_LowFP,1500.0,30.0,10.0,0.5373,8.77,9.66,9.56,-1.0,0.0748,0.7259,0.1279,2089,25857,789,176276
+Scenario_C_SevereFN_ModFP,3000.0,50.0,10.0,0.4428,16.08,17.66,17.62,-0.2,0.0627,0.7769,0.1654,2236,33425,642,168708
