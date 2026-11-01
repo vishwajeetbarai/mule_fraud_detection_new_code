@@ -1,0 +1,13 @@
+scenario,month,threshold,reason
+Scenario A: Static Validation Threshold,5,0.7568666915481376,validation_initialization
+Scenario A: Static Validation Threshold,7,0.7568666915481376,static_or_no_drift
+Scenario B: TDTA (0-Day Delay),5,0.7568666915481376,validation_initialization
+Scenario B: TDTA (0-Day Delay),7,0.7895004615480807,RECALIBRATED_SUCCESSFULLY
+Scenario C: TDTA (7-Day Delay),5,0.7568666915481376,validation_initialization
+Scenario C: TDTA (7-Day Delay),7,0.7899473153219966,RECALIBRATED_SUCCESSFULLY
+Scenario D: TDTA (14-Day Delay),5,0.7568666915481376,validation_initialization
+Scenario D: TDTA (14-Day Delay),7,0.791085054161151,RECALIBRATED_SUCCESSFULLY
+Scenario E: TDTA (30-Day Delay),5,0.7568666915481376,validation_initialization
+Scenario E: TDTA (30-Day Delay),7,0.7568666915481376,RECALIBRATED_SUCCESSFULLY
+Scenario F: TDTA (60-Day Delay),5,0.7568666915481376,validation_initialization
+Scenario F: TDTA (60-Day Delay),7,0.7568666915481376,RECALIBRATED_SUCCESSFULLY

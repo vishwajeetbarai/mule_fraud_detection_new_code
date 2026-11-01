@@ -1,0 +1,4 @@
+investigation_capacity,n_investigated,frauds_detected,precision,recall,threshold_cutoff
+Top 1%,2050,588,0.2868,0.2043,0.9243
+Top 2%,4100,901,0.2198,0.3131,0.8895
+Top 5%,10250,1454,0.1419,0.5052,0.7945

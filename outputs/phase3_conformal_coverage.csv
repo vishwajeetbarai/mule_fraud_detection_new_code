@@ -1,0 +1,6 @@
+subgroup_dimension,subgroup,sample_size,empirical_coverage,coverage_ci_95,target_coverage,coverage_deficit,average_set_size,pct_singleton_legit,pct_singleton_fraud,pct_ambiguous_set,exchangeability_status
+customer_age_group,25-35,63322,0.9597,"0.9597 [0.9581, 0.9612]",0.95,0.0,1.3588,59.69,4.43,35.88,Covariate Shift (Empirical Only)
+customer_age_group,35-50,82149,0.9221,"0.9221 [0.9203, 0.9239]",0.95,0.0279,1.4491,46.28,8.81,44.91,Covariate Shift (Empirical Only)
+customer_age_group,50-65,6464,0.8499,"0.8499 [0.8410, 0.8584]",0.95,0.1001,1.5432,27.69,17.99,54.32,Covariate Shift (Empirical Only)
+customer_age_group,65+,1639,0.8487,"0.8487 [0.8305, 0.8652]",0.95,0.1013,1.5558,26.05,18.36,55.58,Covariate Shift (Empirical Only)
+customer_age_group,<25,51437,0.9778,"0.9778 [0.9765, 0.9791]",0.95,0.0,1.2871,68.95,2.34,28.71,Covariate Shift (Empirical Only)

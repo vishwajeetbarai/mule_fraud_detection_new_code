@@ -1,0 +1,4 @@
+action,count,percentage,actual_frauds_contained,actual_legitimates_contained,operational_meaning
+AUTO_APPROVE,113493,55.36,172,113321,Frictionless automated onboarding (Zero investigation burden)
+AUTO_FLAG,12722,6.21,1578,11144,High-confidence fraud catch / Automated step-up verification
+HUMAN_REVIEW,78796,38.44,1128,77668,Ambiguous/conflict region routed to human investigator queue
