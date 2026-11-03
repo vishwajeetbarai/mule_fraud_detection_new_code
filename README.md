@@ -175,9 +175,3 @@ mule_newcode/
 > *"Initially, older applicants had higher error rates because synthetic identity fraud rings heavily target older credit profiles in the benchmark dataset (fraud rate is 5% in seniors vs 0.6% in youth). To fix this, we implemented **Mondrian Group-Conditional Conformal Prediction**, which calibrates confidence sets separately for each age group. This restored empirical coverage to 96.79% for seniors, ensuring full ethical compliance with the US EEOC Four-Fifths Rule."*
 
 ---
-
-## 📄 7. Team Guide & Master Defense PDF Locations
-
-Complete, beautifully formatted PDF guides are compiled and ready to share:
-- **Team Learning & Viva Guide:** [`C:\Users\rjcvi\Downloads\Mule_Fraud_Detection_Complete_Team_Guide.pdf`](file:///C:/Users/rjcvi/Downloads/Mule_Fraud_Detection_Complete_Team_Guide.pdf)
-- **High-Novelty Dissertation PDF:** [`D:\Downloads\SET Project\Mule_Account_Fraud_Detection_Comprehensive_Research_Report.pdf`](file:///D:/Downloads/SET%20Project/Mule_Account_Fraud_Detection_Comprehensive_Research_Report.pdf)
