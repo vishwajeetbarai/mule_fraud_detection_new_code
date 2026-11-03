@@ -1,4 +1,4 @@
-# Defensible, Drift-Aware & Uncertainty-Guided Bank Account Fraud Detection
+# MuleShield - Defensible, Drift-Aware & Uncertainty-Guided Bank Account Fraud Detection
 ### An Enterprise & Publication-Grade AI Gatekeeper on the 1,000,000-Record NeurIPS 2022 Benchmark
 **Degree / Milestone:** M.Sc. Data Science Major Project | VIT Vellore (Review 3 Defense)  
 **Verification:** 50 / 50 Passing Automated Unit Tests (100% Green) | Strict Zero-Leakage Pipeline
